@@ -1,0 +1,232 @@
+---
+title: "Component Overrides"
+description: "How to customize component content while keeping design linked to the master component"
+---
+
+## Overview
+
+**Overrides** let you customize the content of a component instance in an email while keeping its design linked to the master component. This is the mechanism that connects components in your library to instances in emails.
+
+## The Core Concept
+
+<CardGroup cols={2}>
+  <Card title="Master Component" icon="package">
+    **In the library**
+    
+    - Fixed design
+    - Fixed structure
+    - Source of truth for styles
+    - Update once, all instances update
+  </Card>
+  <Card title="Instance in Email" icon="copy">
+    **In your email**
+    
+    - References the master
+    - Can override content
+    - Design inherited from master
+    - Content can be customized
+  </Card>
+</CardGroup>
+
+## What Can Be Overridden?
+
+Overrides allow you to customize **content**, not **design**:
+
+<AccordionGroup>
+  <Accordion title="✅ Overridable (Content)">
+    - **Text content**: The text inside text elements
+    - **Image URLs**: The source URL of images
+    - **Links**: URLs for buttons and links (href)
+    - **Alt text**: Alt attribute for images
+    - **Titles**: Title attribute for buttons
+    
+    These are content properties that can vary per instance.
+  </Accordion>
+  
+  <Accordion title="❌ Not Overridable (Design)">
+    - Colors (come from Style Library tokens)
+    - Font sizes (via textStyleId)
+    - Spacing (padding, margin)
+    - Borders
+    - Background colors
+    
+    *These properties stay linked to the master component*
+  </Accordion>
+</AccordionGroup>
+
+## Override Format
+
+Overrides are stored as an array or dictionary:
+
+### Array Format (New)
+
+```json
+{
+  "type": "component",
+  "content": "CTA Button",
+  "overrides": [
+    {
+      "elementId": "element-btn-1",
+      "content": "Sign up now",
+      "href": "https://signup.com"
+    },
+    {
+      "elementId": "element-img-2",
+      "src": "https://example.com/new-image.jpg",
+      "alt": "Updated image"
+    }
+  ]
+}
+```
+
+### Dictionary Format (Legacy)
+
+```json
+{
+  "type": "component",
+  "content": "CTA Button",
+  "overrides": {
+    "element-btn-1": {
+      "content": "Sign up now",
+      "href": "https://signup.com"
+    },
+    "element-img-2": {
+      "src": "https://example.com/new-image.jpg"
+    }
+  }
+}
+```
+
+## Resolution Flow
+
+<Steps>
+  <Step title="1. Instance in email">
+    Your email contains a component reference (type: "component").
+  </Step>
+  <Step title="2. Load master">
+    Mailkick loads the master component from the library.
+  </Step>
+  <Step title="3. Apply overrides">
+    Overrides are applied to matching elements in the master.
+  </Step>
+  <Step title="4. Render">
+    The resolved instance is rendered with master design + overridden content.
+  </Step>
+</Steps>
+
+## Real-World Example
+
+Let's say you have a "CTA Button" component:
+
+### Master Component Structure
+
+```json
+{
+  "id": "cta-button-primary",
+  "name": "CTA Button",
+  "children": [
+    {
+      "id": "element-btn-1",
+      "type": "button",
+      "content": "Click here",
+      "properties": {
+        "buttonStyleId": "primary",
+        "padding": "12px 24px"
+      }
+    }
+  ]
+}
+```
+
+### Instance in Email with Override
+
+```json
+{
+  "type": "component",
+  "content": "CTA Button",
+  "overrides": [
+    {
+      "elementId": "element-btn-1",
+      "content": "Sign up now",
+      "href": "https://signup.com"
+    }
+  ]
+}
+```
+
+### Final Rendered Result
+
+The button displays:
+- ✅ **Text**: "Sign up now" (from override)
+- ✅ **Style**: Primary button style from Style Library (from master)
+- ✅ **Link**: "https://signup.com" (from override)
+- ✅ **Padding**: "12px 24px" (from master, not overridable)
+
+<Info>
+  The design (colors, padding, border radius) comes from the master component and Style Library tokens. Only content properties are overridden.
+</Info>
+
+## Element IDs
+
+Each element in a component has a **unique ID** used to reference it in overrides:
+
+- Format: `element-{id}` or just `{id}`
+- The ID is preserved during resolution
+- Allows precise targeting for overrides
+
+### Finding Element IDs
+
+When editing a component, you can see element IDs in:
+- The element properties panel
+- The hierarchy breadcrumb
+- Component editor inspector
+
+## Modifying the Master Component
+
+<Warning>
+  When you modify a master component's design, all emails using that component automatically update with the new styles.
+</Warning>
+
+<Info>
+  Content overrides are preserved when the master is updated. Only the design changes.
+</Info>
+
+### Example: Updating Master Design
+
+**Before**: Master component has `backgroundColor: "#F0F0F0"`
+
+**After**: You change master to `backgroundColor: "#FFFFFF"`
+
+**Result**: All instances in all emails update to white background, but text content overrides remain unchanged.
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use clear element structure">
+    Give your component elements logical structures so overrides are easy to understand and apply.
+  </Accordion>
+  
+  <Accordion title="Limit overrides to content">
+    Only override content properties (text, URLs). For design variants, create separate components instead.
+  </Accordion>
+  
+  <Accordion title="Test after master changes">
+    After modifying a master component, check that all emails using it still display correctly with their overrides.
+  </Accordion>
+  
+  <Accordion title="Document override points">
+    If a component is meant to be customized, document which elements can be overridden in the component name or notes.
+  </Accordion>
+</AccordionGroup>
+
+## Override Limitations
+
+<Warning>
+  You cannot override:
+  - Design tokens (colors, text styles, button styles)
+  - Spacing properties (padding, margin)
+  - Structural properties (width, height, flex properties)
+  - Border styles
+</Warning>
+
+If you need different designs, create variant components instead of trying to override design properties.

@@ -1,0 +1,273 @@
+---
+title: "Structural Elements"
+description: "Organizing elements: groups, flex-rows, and columns for complex layouts"
+---
+
+## Overview
+
+**Structural elements** organize and lay out your simple elements. They contain other elements and define how they're arranged. These are the "containers" that give structure to your emails.
+
+## Types of Structural Elements
+
+### Group (`group`)
+
+A **group** is a simple container that groups multiple elements together. It lets you apply common styles to several elements and manipulate them as a unit.
+
+<CardGroup cols={2}>
+  <Card title="Characteristics">
+    - Simple container
+    - Full width by default
+    - Can contain any elements
+    - Allows applying styles to the group
+  </Card>
+  <Card title="Key Properties">
+    - **backgroundColor**: Background color
+    - **padding**: Inner spacing
+    - **borderRadius**: Rounded corners
+    - **borderWidth / borderColor**: Borders
+    - **width**: Container width
+  </Card>
+</CardGroup>
+
+**Use cases**: Sections with colored backgrounds, bordered containers, wrappers for multiple elements
+
+#### Group Structure
+
+```
+Group
+├── Text Element
+├── Image Element
+└── Button Element
+```
+
+#### Example Usage
+
+```json
+{
+  "type": "group",
+  "properties": {
+    "backgroundColor": "#F5F5F5",
+    "padding": "20px",
+    "borderRadius": "8px"
+  },
+  "children": [
+    { "type": "text", "content": "Section Title" },
+    { "type": "button", "content": "Learn More" }
+  ]
+}
+```
+
+Renders as react-email:
+
+```tsx
+<Section style={{ backgroundColor: '#F5F5F5', padding: '20px', borderRadius: '8px' }}>
+  <Text>Section Title</Text>
+  <Button>Learn More</Button>
+</Section>
+```
+
+---
+
+### Flex-row (`flex-row`)
+
+A **flex-row** creates a multi-column layout. It's the most powerful structural element for creating complex layouts.
+
+<CardGroup cols={2}>
+  <Card title="Structure">
+    - Contains **columns**
+    - Each column contains **elements**
+    - Columns stack vertically on mobile (configurable)
+  </Card>
+  <Card title="Key Properties">
+    - **columns**: Array of columns with properties
+    - **gap**: Spacing between columns
+    - **justifyContent**: Horizontal alignment
+    - **alignItems**: Vertical alignment
+    - **mobileBehavior**: Stack vertically or stay horizontal on mobile
+  </Card>
+</CardGroup>
+
+#### Columns (`column`)
+
+Each column in a flex-row has its own properties:
+
+<CardGroup cols={2}>
+  <Card title="Column Properties">
+    - **width**: Width as percentage (e.g., "50%")
+    - **backgroundColor**: Background color
+    - **padding**: Inner spacing
+    - **verticalAlign**: Content vertical alignment
+  </Card>
+  <Card title="Column Content">
+    - **elements**: Array of elements in the column
+    - Can contain any elements (simple or structural)
+  </Card>
+</CardGroup>
+
+**Use cases**: 2/3 column layouts, product grids, headers with logo + menu
+
+#### Flex-row Structure
+
+```
+Flex-row
+├── Column 1 (50%)
+│   ├── Image
+│   └── Text
+└── Column 2 (50%)
+    ├── Heading
+    └── Button
+```
+
+#### Example: 2-Column Layout
+
+```json
+{
+  "type": "flex-row",
+  "properties": {
+    "gap": "20px",
+    "mobileBehavior": "vertical"
+  },
+  "columns": [
+    {
+      "width": "50%",
+      "elements": [
+        { "type": "image", "src": "product.jpg" }
+      ]
+    },
+    {
+      "width": "50%",
+      "elements": [
+        { "type": "text", "content": "Product Name" },
+        { "type": "button", "content": "Buy Now" }
+      ]
+    }
+  ]
+}
+```
+
+Renders as react-email:
+
+```tsx
+<Section>
+  <Row>
+    <Column width="50%">
+      <Img src="product.jpg" />
+    </Column>
+    <Column width="50%">
+      <Text>Product Name</Text>
+      <Button>Buy Now</Button>
+    </Column>
+  </Row>
+</Section>
+```
+
+<Info>
+  On mobile, if `mobileBehavior: "vertical"`, columns stack vertically. This is handled automatically by react-email's responsive components.
+</Info>
+
+#### Flexible Column Widths
+
+Columns can have different widths:
+
+- **Equal**: `50%` / `50%` (2 columns)
+- **Unequal**: `33%` / `67%` (sidebar + main content)
+- **Three columns**: `33%` / `34%` / `33%`
+- **Any combination** that adds up to 100%
+
+## Structural Hierarchy
+
+Structural elements can be **nested** to create complex layouts:
+
+```
+Email
+├── Group (Header Section)
+│   ├── Text (Logo)
+│   └── Flex-row (Navigation)
+│       ├── Column 1
+│       │   └── Text (Link 1)
+│       └── Column 2
+│           └── Text (Link 2)
+├── Group (Hero Section)
+│   └── Flex-row
+│       └── Column 1 (100%)
+│           ├── Text (Headline)
+│           └── Button (CTA)
+└── Group (Footer)
+    └── Social (Social Links)
+```
+
+## Working with Structural Elements
+
+### Creating Structures
+
+<Steps>
+  <Step title="Group">
+    Select multiple elements and group them, or create an empty group and add elements to it.
+  </Step>
+  <Step title="Flex-row">
+    Click the "Multi-columns" button in the toolbar, or select elements and convert them to a flex-row.
+  </Step>
+  <Step title="Columns">
+    Add columns to a flex-row via the column editor. Adjust widths by resizing.
+  </Step>
+</Steps>
+
+### Modifying Structures
+
+- **Group**: Select the group to modify its properties (background, padding, etc.)
+- **Flex-row**: Select the flex-row to modify spacing, alignment, mobile behavior
+- **Column**: Select a column to modify its width, background, padding
+
+### Deleting Structures
+
+<Warning>
+  Deleting a group or flex-row also deletes all elements it contains. Make sure you want to remove everything before deleting.
+</Warning>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use groups for">
+    - Logical grouping of elements
+    - Applying common styles (background, padding)
+    - Making sections easier to manipulate
+  </Accordion>
+  
+  <Accordion title="Use flex-rows for">
+    - Multi-column layouts
+    - Side-by-side content
+    - Product/article grids
+  </Accordion>
+  
+  <Accordion title="Avoid">
+    - Flex-rows with a single column (use a group instead)
+    - Too many nesting levels (2-3 levels recommended max)
+    - Fixed pixel widths for columns (use percentages)
+  </Accordion>
+  
+  <Accordion title="Mobile considerations">
+    - Test how flex-rows stack on mobile
+    - Use `mobileBehavior: "vertical"` for columns that should stack
+    - Consider mobile readability when choosing column widths
+  </Accordion>
+</AccordionGroup>
+
+## Responsive Behavior
+
+Structural elements adapt automatically to mobile screens:
+
+- **Groups**: Maintain their width, may need manual adjustment for mobile
+- **Flex-rows**: Stack columns vertically if `mobileBehavior: "vertical"`
+
+<Info>
+  react-email handles responsive layouts automatically. Columns in flex-rows become full-width blocks on mobile when configured to stack.
+</Info>
+
+## Rendering with react-email
+
+Structural elements map to react-email components:
+
+- `group` → `<Section>` from `@react-email/components`
+- `flex-row` → `<Row>` with `<Column>` children from `@react-email/components`
+
+These react-email components use table-based layouts for maximum email client compatibility, while providing a modern flex-like API.

@@ -1,0 +1,59 @@
+---
+title: "Connect OneSignal"
+description: "Sync Mailkick emails to OneSignal email templates"
+icon: "plug"
+---
+
+This integration lets you create/update **OneSignal Email Templates** from Mailkick.
+
+## Prerequisites
+
+- You must be a **workspace admin**.
+- You need:
+  - **OneSignal App ID**
+  - **OneSignal REST API Key**
+
+## Step 1 — Find your OneSignal keys
+
+In OneSignal, open **Settings → Keys & IDs**, then copy:
+
+- **App ID**
+- **REST API Key**
+
+## Step 2 — Add OneSignal in Mailkick
+
+1. Open **Settings → Integrations**
+2. Select **OneSignal**
+3. Paste your **API key**
+4. Enter your **OneSignal App ID**
+5. Click **Save changes**
+
+<img
+  style={{ borderRadius: '0.75rem' }}
+  src="/app/doc/integration/integration_onesignal.jpg"
+  alt="Mailkick OneSignal integration settings"
+/>
+
+## Step 3 — Sync an email
+
+1. Open an email in the editor
+2. Click **Export**
+3. Click **Sync to OneSignal**
+
+<img
+  style={{ borderRadius: '0.75rem' }}
+  src="/app/doc/integration/sync_example_onesignal.jpg"
+  alt="Sync an email to OneSignal from Mailkick"
+/>
+
+After a successful sync, Mailkick returns a OneSignal dashboard link like:
+
+- `https://dashboard.onesignal.com/apps/<app_id>/templates/<template_id>`
+
+## Self-hosting note (server secrets)
+
+If you run your own Supabase Edge Functions, make sure your environment includes the encryption secret used to read stored API keys:
+
+- `API_KEY_ENCRYPTION_SECRET`
+
+

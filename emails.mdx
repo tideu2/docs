@@ -1,0 +1,164 @@
+---
+title: "Emails"
+description: "Understanding email structure and react-email rendering in Mailkick"
+---
+
+## Overview
+
+**Emails** are the templates you create and send to your recipients. Each email is a hierarchical structure of elements that define its content and appearance. All emails are rendered using **react-email** for bulletproof cross-client compatibility.
+
+## Email Structure
+
+An email in Mailkick contains:
+
+- **Properties**: Metadata (name, description, subject, background color, width, padding)
+- **Elements**: Hierarchical structure of simple elements (text, button, image) and structural elements (groups, flex-rows)
+- **Style Library**: References to design tokens (colors, text styles, button styles, links)
+
+## Creating an Email
+
+<Steps>
+  <Step title="Create a new email">
+    Click "New Email" in your dashboard or email list.
+  </Step>
+  <Step title="Add elements">
+    Use the toolbar to add simple elements (T for text, I for image, B for button) or structural elements (flex-row, group).
+  </Step>
+  <Step title="Apply styles">
+    Use tokens from your Style Library to apply consistent styling. Select a text element and choose a textStyleId, or a button and choose a buttonStyleId.
+  </Step>
+  <Step title="Add components">
+    Insert reusable components from your library to speed up creation. Components maintain design consistency across emails.
+  </Step>
+  <Step title="Preview">
+    Preview your email across different clients. Mailkick renders using react-email components that ensure compatibility.
+  </Step>
+</Steps>
+
+## Email Properties
+
+Each email has configurable properties:
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| **Name** | Email identifier | "Welcome Email" |
+| **Description** | Internal description | "Sent to new users after signup" |
+| **Subject** | Email subject line | "Welcome to Mailkick!" |
+| **Background** | Email background color | `#FFFFFF` or token reference |
+| **Width** | Content width | `600px` |
+| **Padding** | Inner spacing | `20px` |
+
+## Element Hierarchy
+
+Emails follow a tree structure:
+
+```
+Email
+├── Simple Element (text, button, image, separator, social)
+├── Group (wrapper for multiple elements)
+│   └── Elements inside the group
+├── Flex-row (multi-column layout)
+│   ├── Column 1
+│   │   └── Elements in column 1
+│   └── Column 2
+│       └── Elements in column 2
+└── Component (reference to library component)
+    └── Component structure (resolved dynamically)
+```
+
+## Rendering with react-email
+
+<Info>
+  All emails are converted to **react-email** components, then rendered as HTML. This ensures compatibility across Gmail, Outlook, Apple Mail, and other email clients.
+</Info>
+
+### How it works
+
+1. **Editor**: You build visually in Mailkick's editor
+2. **Conversion**: Mailkick converts your structure to react-email components (`<Text>`, `<Button>`, `<Img>`, `<Section>`, etc.)
+3. **Rendering**: react-email generates bulletproof HTML with inline styles and table-based layouts
+4. **Delivery**: The HTML is sent to recipients
+
+### Example output
+
+When you create a simple email with text and a button, Mailkick generates react-email code like:
+
+```tsx
+import { Html, Body, Section, Text, Button } from '@react-email/components';
+
+export default function Email() {
+  return (
+    <Html>
+      <Body style={{ backgroundColor: '#ffffff' }}>
+        <Section style={{ padding: '20px', maxWidth: '600px' }}>
+          <Text style={{ fontSize: '16px', color: '#333333' }}>
+            Welcome to Mailkick!
+          </Text>
+          <Button
+            href="https://mailkick.app"
+            style={{
+              backgroundColor: '#F97316',
+              color: '#ffffff',
+              padding: '12px 24px',
+              borderRadius: '8px',
+            }}
+          >
+            Get Started
+          </Button>
+        </Section>
+      </Body>
+    </Html>
+  );
+}
+```
+
+This code is then rendered to HTML that works across all email clients.
+
+## Email Properties Reference
+
+### Background
+
+The email background is applied to the entire email container. You can use:
+
+- A hex color: `#FFFFFF`
+- A color token ID from your Style Library
+
+### Width
+
+Controls the maximum width of the email content. Common values:
+
+- `600px` - Standard email width
+- `700px` - Wider layouts
+- `100%` - Full width (rarely used)
+
+### Padding
+
+Adds spacing around the email content. Typically `20px` or `40px`.
+
+<Warning>
+  The padding is applied to the email container, not individual elements. Use groups or sections for inner spacing.
+</Warning>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Start with a structure">
+    Plan your email layout first. Use groups to organize sections, flex-rows for multi-column layouts.
+  </Accordion>
+  
+  <Accordion title="Use design tokens">
+    Always use tokens from your Style Library instead of hardcoded values. This ensures brand consistency and makes updates easier.
+  </Accordion>
+  
+  <Accordion title="Test responsiveness">
+    Flex-rows automatically stack on mobile, but test to ensure your email looks good on small screens.
+  </Accordion>
+  
+  <Accordion title="Optimize images">
+    Use optimized images and consider using Mailkick's image proxy for better delivery.
+  </Accordion>
+  
+  <Accordion title="Preview before sending">
+    Use the preview feature to see how your email looks across different clients before sending.
+  </Accordion>
+</AccordionGroup>

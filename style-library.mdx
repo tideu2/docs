@@ -1,0 +1,258 @@
+---
+title: "Style Library"
+description: "Centralized design token system for brand consistency and effortless updates"
+---
+
+## Overview
+
+The **Style Library** is the centralized system that stores all your **design tokens**. It ensures visual consistency and lets you update the design of all emails by changing tokens once. Think of it like Figma's design tokens, but built specifically for email.
+
+## Core Principle
+
+<CardGroup cols={2}>
+  <Card title="Centralization">
+    All styles are defined **once** in the Style Library.
+  </Card>
+  <Card title="Reference, don't duplicate">
+    Emails and components **reference** these tokens instead of using hardcoded values.
+  </Card>
+  <Card title="Automatic propagation">
+    Change a token, and all elements using it update **automatically**.
+  </Card>
+  <Card title="Enforced consistency">
+    You can only use styles defined in the library → guarantees brand consistency.
+  </Card>
+</CardGroup>
+
+## Token Types
+
+### Colors (`colors`)
+
+Colors are reusable tokens referenced by ID.
+
+<CardGroup cols={2}>
+  <Card title="Structure">
+    - **id**: Unique identifier (e.g., "primary", "secondary")
+    - **name**: Human-readable name (e.g., "Primary Orange")
+    - **value**: Hex color code (e.g., "#F97316")
+    - **usage**: Allowed usage types (button, text, background)
+  </Card>
+  <Card title="Usage">
+    Used via `colorId` or `backgroundColor` in element properties.
+  </Card>
+</CardGroup>
+
+**Example**:
+```json
+{
+  "id": "primary",
+  "name": "Primary Orange",
+  "value": "#F97316",
+  "usage": ["button", "text", "background"]
+}
+```
+
+<Info>
+  A color can be used for buttons, text, backgrounds, or borders depending on its usage configuration.
+</Info>
+
+### Text Styles (`textStyles`)
+
+Text styles define typography (size, weight, font family, etc.).
+
+<CardGroup cols={2}>
+  <Card title="Structure">
+    - **id**: Unique identifier (e.g., "h1", "body")
+    - **name**: Human-readable name (e.g., "Heading 1")
+    - **fontSize**: Font size (e.g., "32px")
+    - **fontWeight**: Weight (bold, normal, etc.)
+    - **fontFamily**: Font family
+    - **lineHeight**: Line height
+  </Card>
+  <Card title="Usage">
+    Used via `textStyleId` in text and button elements.
+  </Card>
+</CardGroup>
+
+**Example**:
+```json
+{
+  "id": "h1",
+  "name": "Heading 1",
+  "fontSize": "32px",
+  "fontWeight": "bold",
+  "fontFamily": "Inter, sans-serif",
+  "lineHeight": "1.2"
+}
+```
+
+### Button Styles (`buttonStyles`)
+
+Button styles define complete button appearance.
+
+<CardGroup cols={2}>
+  <Card title="Structure">
+    - **id**: Unique identifier (e.g., "primary", "secondary")
+    - **name**: Human-readable name (e.g., "Primary CTA")
+    - **colorId**: Background color (reference to color token)
+    - **textStyleId**: Text style (reference to textStyle)
+    - **textColorId**: Text color (optional, reference to color)
+    - **padding**: Inner spacing
+    - **borderRadius**: Rounded corners
+    - **borderWidth / borderColorId**: Borders (optional)
+  </Card>
+  <Card title="Usage">
+    Used via `buttonStyleId` in button elements.
+  </Card>
+</CardGroup>
+
+**Example**:
+```json
+{
+  "id": "primary",
+  "name": "Primary CTA Button",
+  "colorId": "primary",
+  "textStyleId": "body",
+  "textColorId": "white",
+  "padding": "12px 24px",
+  "borderRadius": "8px"
+}
+```
+
+### Link Styles (`linkStyles`)
+
+Link styles define link appearance in text.
+
+<CardGroup cols={2}>
+  <Card title="Structure">
+    - **id**: Unique identifier
+    - **name**: Human-readable name
+    - **colorId**: Link color (reference to color)
+    - **fontWeight**: Font weight
+    - **textDecoration**: Underline style (underline, none)
+    - **hoverColorId**: Hover color (optional)
+  </Card>
+  <Card title="Usage">
+    Used via `linkStyleId` in text elements with `href`.
+  </Card>
+</CardGroup>
+
+## Managing the Style Library
+
+### Adding Tokens
+
+<Steps>
+  <Step title="Access Style Library">
+    Open "Style Library" from the main navigation menu.
+  </Step>
+  <Step title="Add a token">
+    Click "Add" in the appropriate section (Color, Text Style, Button Style, Link Style).
+  </Step>
+  <Step title="Configure">
+    Fill in the token properties (name, values, etc.).
+  </Step>
+  <Step title="Save">
+    The token is immediately available in all editors.
+  </Step>
+</Steps>
+
+### Modifying Tokens
+
+When you modify an existing token:
+
+<Warning>
+  **All emails and components using that token automatically update** with the new value.
+</Warning>
+
+<Info>
+  This is the main advantage of the Style Library: one central change propagates everywhere instantly.
+</Info>
+
+### Deleting Tokens
+
+<Warning>
+  Before deleting a token, check its usage with "View usage" to see which emails/components use it.
+</Warning>
+
+If a token is in use, you'll need to either:
+- Replace it in all elements that use it first
+- Delete it and manually update each element
+
+### Viewing Token Usage
+
+Click "View usage" on any token to see:
+- List of emails using this token
+- List of components using this token
+- Direct navigation to each instance
+
+## Importing Styles
+
+You can import styles from an existing email:
+
+<Steps>
+  <Step title="In email editor">
+    Select "Import styles" option from an existing email.
+  </Step>
+  <Step title="Automatic extraction">
+    Mailkick automatically extracts:
+    - All colors used
+    - All unique text styles
+    - All unique button styles
+    - All unique link styles
+  </Step>
+  <Step title="Add to library">
+    Extracted tokens are added to your Style Library.
+  </Step>
+</Steps>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Consistent naming">
+    Use clear, consistent names for your tokens (e.g., "primary", "secondary", "h1", "body").
+  </Accordion>
+  
+  <Accordion title="Logical organization">
+    Group tokens by logical category. Use prefixes if needed (e.g., "btn-primary", "text-heading").
+  </Accordion>
+  
+  <Accordion title="Reuse existing tokens">
+    Reuse existing tokens rather than creating new similar ones. This makes maintenance easier.
+  </Accordion>
+  
+  <Accordion title="Document usage">
+    Use descriptive names to document the intended usage of each token.
+  </Accordion>
+  
+  <Accordion title="Test after changes">
+    After modifying a token, check a few emails using that token to ensure the result looks correct.
+  </Accordion>
+</AccordionGroup>
+
+## Style Library Benefits
+
+<CardGroup cols={2}>
+  <Card title="🎨 Consistency">
+    You can't use undefined colors/styles → consistent brand
+  </Card>
+  <Card title="⚡ Maintenance">
+    One central change updates all emails
+  </Card>
+  <Card title="🚀 Productivity">
+    No more hunting for color codes → select from library
+  </Card>
+  <Card title="🔄 Rebranding">
+    Change your entire brand by modifying a few tokens
+  </Card>
+</CardGroup>
+
+## Rendering with react-email
+
+Design tokens are converted to inline styles in react-email:
+
+- Color tokens → `color: '#F97316'` (hex values)
+- Text style tokens → Combined font properties
+- Button style tokens → Complete button styling
+- Link style tokens → Link-specific styles
+
+All token values are resolved at render time and applied as inline styles, ensuring compatibility across email clients while maintaining the flexibility of your design system.
