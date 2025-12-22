@@ -1,0 +1,84 @@
+---
+title: "Connect SendGrid"
+description: "Sync Mailkick emails to SendGrid Dynamic Templates"
+icon: "plug"
+---
+
+This integration lets you **push your Mailkick email HTML** to **SendGrid Dynamic Templates**.
+
+## Prerequisites
+
+- You must be a **workspace admin**.
+- You need a **SendGrid API key** with **Mail Send** and **Template Engine** permissions.
+
+## Step 1 — Create your SendGrid API key
+
+1. Log in to [SendGrid](https://app.sendgrid.com)
+2. Go to **Settings → API Keys**
+3. Click **Create API Key**
+4. Select **Restricted Access** and enable:
+   - **Mail Send** → Full Access
+   - **Template Engine** → Full Access
+5. Copy the generated key
+
+<Warning>
+Save your API key immediately — SendGrid only shows it once!
+</Warning>
+
+## Step 2 — Add SendGrid in Mailkick
+
+1. Open **Settings → Integrations**
+2. Select **SendGrid**
+3. Paste your API key
+4. Click **Save changes**
+
+<img
+  style={{ borderRadius: '0.75rem' }}
+  src="/app/doc/integration/integration_sendgrid.jpg"
+  alt="Mailkick SendGrid integration settings"
+/>
+
+## Step 3 — Sync an email
+
+1. Open an email in the editor
+2. Click **Export**
+3. Click **Sync to SendGrid**
+
+After a successful sync, you'll get a SendGrid editor link like:
+
+- `https://mc.sendgrid.com/dynamic-templates/{template_id}/version/{version_id}/editor`
+
+## How sync works
+
+When you sync an email to SendGrid:
+
+1. **First sync** → Creates a new Dynamic Template with a version
+2. **Subsequent syncs** → Updates the existing version (idempotent via content hash)
+3. **Template deleted on SendGrid** → Mailkick automatically recreates it
+
+<Info>
+Mailkick uses content hashing to avoid unnecessary API calls. If the HTML hasn't changed, no update is sent.
+</Info>
+
+## Using Dynamic Templates
+
+SendGrid Dynamic Templates support **Handlebars** variables. In your email, you can use:
+
+```handlebars
+Hello {{first_name}},
+
+Your order #{{order_id}} has been shipped!
+```
+
+These variables will be resolved when you send via SendGrid's API.
+
+## Common issues
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `sendgrid_not_configured` | No API key saved | Add your API key in Settings → Integrations |
+| `sendgrid_missing_api_key` | API key was deleted | Re-add your API key |
+| `sendgrid_sync_failed` | API error | Check API key permissions (Template Engine required) |
+| `sendgrid_http_401` | Invalid API key | Generate a new API key in SendGrid |
+| `sendgrid_http_403` | Insufficient permissions | Enable Template Engine access on your key |
+

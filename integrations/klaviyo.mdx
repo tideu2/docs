@@ -1,0 +1,84 @@
+---
+title: "Connect Klaviyo"
+description: "Sync Mailkick emails to Klaviyo Templates"
+icon: "plug"
+---
+
+This integration lets you **push your Mailkick email HTML** to **Klaviyo Templates**.
+
+## Prerequisites
+
+- You must be a **workspace admin**.
+- You need a **Klaviyo Private API key** with **Templates** scope.
+
+## Step 1 — Create your Klaviyo API key
+
+1. Log in to [Klaviyo](https://www.klaviyo.com)
+2. Go to **Settings → API Keys**
+3. Click **Create Private API Key**
+4. Give it a name (e.g., "Mailkick Integration")
+5. Under **Scopes**, enable:
+   - **Templates** → Full Access
+6. Click **Create** and copy the key
+
+<Warning>
+Save your API key immediately — Klaviyo only shows it once!
+</Warning>
+
+## Step 2 — Add Klaviyo in Mailkick
+
+1. Open **Settings → Integrations**
+2. Select **Klaviyo**
+3. Paste your API key
+4. Click **Save changes**
+
+<img
+  style={{ borderRadius: '0.75rem' }}
+  src="/app/doc/integration/integration_klaviyo.jpg"
+  alt="Mailkick Klaviyo integration settings"
+/>
+
+## Step 3 — Sync an email
+
+1. Open an email in the editor
+2. Click **Export**
+3. Click **Sync to Klaviyo**
+
+After a successful sync, you'll get a Klaviyo editor link like:
+
+- `https://www.klaviyo.com/email-editor/{template_id}/edit`
+
+## How sync works
+
+When you sync an email to Klaviyo:
+
+1. **First sync** → Creates a new Template
+2. **Subsequent syncs** → Updates the existing template (idempotent via content hash)
+3. **Template deleted on Klaviyo** → Mailkick automatically recreates it
+
+<Info>
+Mailkick uses content hashing to avoid unnecessary API calls. If the HTML hasn't changed, no update is sent.
+</Info>
+
+## Using Klaviyo variables
+
+Klaviyo Templates support **Django-style** variables. In your email, you can use:
+
+```django
+Hello {{ first_name|default:"there" }},
+
+Your order #{{ order_id }} has been shipped!
+```
+
+These variables will be resolved when you send via Klaviyo Flows or Campaigns.
+
+## Common issues
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `klaviyo_not_configured` | No API key saved | Add your API key in Settings → Integrations |
+| `klaviyo_missing_api_key` | API key was deleted | Re-add your API key |
+| `klaviyo_sync_failed` | API error | Check API key permissions (Templates scope required) |
+| `klaviyo_http_401` | Invalid API key | Generate a new API key in Klaviyo |
+| `klaviyo_http_403` | Insufficient permissions | Enable Templates scope on your key |
+
