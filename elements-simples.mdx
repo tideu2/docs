@@ -9,296 +9,147 @@ description: "The building blocks: text, buttons, images, separators, and social
 
 ## Element Types
 
-### Text Element (`text`)
+### Text Element
 
 The text element displays text content, optionally with a link.
 
 <CardGroup cols={2}>
   <Card title="Key Properties">
-    - **content**: The text to display
-    - **textStyleId**: Text style from Style Library
-    - **colorId**: Text color (from Style Library)
-    - **href**: Optional URL to make it a link
-    - **textAlign**: Alignment (left, center, right, justify)
+    - **Content**: The text to display
+    - **Text Style**: Style from your Style Library
+    - **Color**: Text color (from Style Library)
+    - **Link**: Optional URL to make it a link
+    - **Alignment**: Left, center, right, justify
   </Card>
   <Card title="Advanced Properties">
-    - **padding**: Inner spacing
-    - **backgroundColor**: Background color
-    - **borderRadius**: Rounded corners
-    - **borderWidth / borderColor**: Borders
+    - **Padding**: Inner spacing
+    - **Background**: Background color
+    - **Border Radius**: Rounded corners
+    - **Border**: Width and color
   </Card>
 </CardGroup>
 
-**Use cases**: Headings, paragraphs, text with links, callouts
+**Use cases**: Headings, paragraphs, text with links, callouts.
 
-**Toolbar shortcut**: Press `T` or click the text icon
-
-#### Example Usage
-
-```json
-{
-  "type": "text",
-  "content": "Welcome to Mailkick!",
-  "properties": {
-    "textStyleId": "h1",
-    "colorId": "primary",
-    "textAlign": "center"
-  }
-}
-```
-
-Renders as react-email:
-
-```tsx
-<Text
-  style={{
-    fontSize: '32px',
-    fontWeight: 'bold',
-    color: '#F97316',
-    textAlign: 'center'
-  }}
->
-  Welcome to Mailkick!
-</Text>
-```
+**Toolbar shortcut**: Press `T` or click the text icon.
 
 ---
 
-### Button Element (`button`)
+### Button Element
 
 Creates a clickable button with a link.
 
 <CardGroup cols={2}>
   <Card title="Key Properties">
-    - **content**: Button text
-    - **href**: Destination URL
-    - **buttonStyleId**: Button style from Style Library
-    - **textAlign**: Button alignment
+    - **Content**: Button text
+    - **Link**: Destination URL
+    - **Button Style**: Style from your Style Library
+    - **Alignment**: Button alignment
   </Card>
   <Card title="Visual Properties">
-    - **backgroundColor**: Background color
-    - **padding**: Inner spacing
-    - **borderRadius**: Rounded corners
-    - **borderWidth / borderColor**: Borders
+    - **Background**: Background color
+    - **Padding**: Inner spacing
+    - **Border Radius**: Rounded corners
+    - **Border**: Width and color
   </Card>
 </CardGroup>
 
-**Use cases**: CTAs, important links, action buttons
+**Use cases**: Call to Action (CTA), important links, action buttons.
 
-**Toolbar shortcut**: Press `B` or click the button icon
+**Toolbar shortcut**: Press `B` or click the button icon.
 
 <Info>
-  Buttons should use the Style Library via `buttonStyleId` rather than manually defining colors. This ensures brand consistency.
+  Buttons should use the Style Library via **Button Style** rather than manually defining colors. This ensures brand consistency.
 </Info>
-
-#### Example Usage
-
-```json
-{
-  "type": "button",
-  "content": "Get Started",
-  "properties": {
-    "buttonStyleId": "primary",
-    "href": "https://mailkick.app/signup"
-  }
-}
-```
-
-Renders as react-email:
-
-```tsx
-<Button
-  href="https://mailkick.app/signup"
-  style={{
-    backgroundColor: '#F97316',
-    color: '#ffffff',
-    padding: '12px 24px',
-    borderRadius: '8px',
-    textAlign: 'center'
-  }}
->
-  Get Started
-</Button>
-```
 
 ---
 
-### Image Element (`image`)
+### Image Element
 
 Displays an image in the email.
 
 <CardGroup cols={2}>
   <Card title="Key Properties">
-    - **src**: Image URL
-    - **alt**: Alt text (required for accessibility)
-    - **href**: Optional URL (makes image clickable)
-    - **width / height**: Dimensions
+    - **Source**: Image URL
+    - **Alt Text**: Description for accessibility (required)
+    - **Link**: Optional URL (makes image clickable)
+    - **Dimensions**: Width and height
   </Card>
   <Card title="Advanced Properties">
-    - **padding**: Spacing around image
-    - **borderRadius**: Rounded corners
-    - **borderWidth / borderColor**: Borders
-    - **align**: Alignment (left, center, right)
+    - **Padding**: Spacing around image
+    - **Border Radius**: Rounded corners
+    - **Border**: Width and color
+    - **Alignment**: Left, center, right
   </Card>
 </CardGroup>
 
-**Use cases**: Logos, product photos, illustrations, hero images
+**Use cases**: Logos, product photos, illustrations, hero images.
 
-**Toolbar shortcut**: Press `I` or click the image icon
+**Toolbar shortcut**: Press `I` or click the image icon.
 
 <Warning>
   Images must be hosted on a publicly accessible server (public URL). Mailkick can proxy images for better delivery and caching.
 </Warning>
 
-#### Example Usage
-
-```json
-{
-  "type": "image",
-  "src": "https://example.com/logo.png",
-  "alt": "Company Logo",
-  "properties": {
-    "width": "200px",
-    "align": "center"
-  }
-}
-```
-
-Renders as react-email:
-
-```tsx
-<Img
-  src="https://example.com/logo.png"
-  alt="Company Logo"
-  width="200"
-  style={{ display: 'block', margin: '0 auto' }}
-/>
-```
-
 ---
 
-### Separator Element (`separator`)
+### Separator Element
 
 Creates a horizontal dividing line.
 
 <CardGroup cols={2}>
   <Card title="Key Properties">
-    - **borderWidth**: Line thickness
-    - **borderColorId**: Color from Style Library
-    - **borderStyle**: Line style (solid, dashed, dotted)
+    - **Thickness**: Line thickness
+    - **Color**: Color from Style Library
+    - **Style**: Solid, dashed, dotted
   </Card>
   <Card title="Advanced Properties">
-    - **width**: Separator width
-    - **padding**: Vertical spacing around separator
-    - **align**: Alignment (left, center, right)
+    - **Width**: Separator width
+    - **Padding**: Vertical spacing around separator
+    - **Alignment**: Left, center, right
   </Card>
 </CardGroup>
 
-**Use cases**: Section dividers, end of content markers, visual breaks
+**Use cases**: Section dividers, end of content markers, visual breaks.
 
-**Toolbar shortcut**: Press `S` or click the separator icon
-
-#### Example Usage
-
-```json
-{
-  "type": "separator",
-  "properties": {
-    "borderWidth": "1px",
-    "borderColorId": "border",
-    "borderStyle": "solid"
-  }
-}
-```
+**Toolbar shortcut**: Press `S` or click the separator icon.
 
 ---
 
-### Social Element (`social`)
+### Social Element
 
 Displays social media icons with links.
 
 <CardGroup cols={2}>
   <Card title="Key Properties">
-    - **socialLinks**: Array of social platforms
-      - `platform`: Facebook, Twitter, Instagram, LinkedIn, etc.
-      - `url`: Profile URL
-    - **socialAlignment**: Alignment (left, center, right)
-    - **socialIconSize**: Icon size
+    - **Social Links**: List of social platforms (Facebook, Twitter, Instagram, LinkedIn, etc.)
+    - **Alignment**: Left, center, right
+    - **Size**: Icon size
   </Card>
   <Card title="Advanced Properties">
-    - **socialGap**: Spacing between icons
-    - **colorId**: Icon color (from Style Library)
-    - **backgroundColor**: Optional background
+    - **Gap**: Spacing between icons
+    - **Color**: Icon color (from Style Library)
+    - **Background**: Optional background
   </Card>
 </CardGroup>
 
-**Use cases**: Footer social links, header share buttons, social proof
+**Use cases**: Footer social links, header share buttons.
 
-**Toolbar shortcut**: Press `R` or click the social icon
-
-#### Example Usage
-
-```json
-{
-  "type": "social",
-  "properties": {
-    "socialLinks": [
-      { "platform": "twitter", "url": "https://twitter.com/mailkick" },
-      { "platform": "linkedin", "url": "https://linkedin.com/company/mailkick" }
-    ],
-    "socialAlignment": "center",
-    "socialIconSize": "24px"
-  }
-}
-```
-
-Renders as react-email using react-email's `<Social>` component.
+**Toolbar shortcut**: Press `R` or click the social icon.
 
 ## Using Elements in the Editor
 
-All simple elements can be added via the **toolbar**:
-
-- **T** - Text
-- **I** - Image  
-- **B** - Button
-- **S** - Separator
-- **R** - Social networks
+All simple elements can be added via the **toolbar** at the top of the editor.
 
 ## Style Library Integration
 
 All simple elements can use **design tokens** from the Style Library:
 
-- **Colors**: Via `colorId` and `backgroundColor`
-- **Text Styles**: Via `textStyleId` (text and button elements)
-- **Button Styles**: Via `buttonStyleId`
-- **Link Styles**: Via `linkStyleId` (for text with href)
+- **Colors**: For text, backgrounds, and borders
+- **Text Styles**: For text and button elements
+- **Button Styles**: Pre-defined button appearances
+- **Link Styles**: For text links
 
 <Info>
   Using the Style Library guarantees visual consistency and makes global design updates effortless.
 </Info>
-
-## Element Hierarchy
-
-Simple elements are **leaf nodes** in the structure tree:
-
-```
-Email / Component
-└── Simple Element (no children)
-```
-
-They can be placed:
-- Directly in an email/component
-- Inside a group
-- Inside a column of a flex-row
-
-## Rendering with react-email
-
-All simple elements are converted to react-email components:
-
-- `text` → `<Text>` from `@react-email/components`
-- `button` → `<Button>` from `@react-email/components`
-- `image` → `<Img>` from `@react-email/components`
-- `separator` → `<Hr>` from `@react-email/components`
-- `social` → `<Social>` from `@react-email/components`
-
-This ensures all elements render correctly across email clients, with proper fallbacks and inline styles.

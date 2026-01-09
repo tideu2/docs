@@ -23,19 +23,7 @@
           {
             "group": "Get Started",
             "pages": [
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/code",
-              "essentials/images",
-              "essentials/markdown",
-              "essentials/navigation",
-              "essentials/reusable-snippets",
-              "essentials/settings"
+              "quickstart"
             ]
           },
           {
@@ -58,14 +46,6 @@
               "integrations/klaviyo",
               "integrations/onesignal",
               "integrations/sendgrid"
-            ]
-          },
-          {
-            "group": "AI Tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/windsurf",
-              "ai-tools/claude-code"
             ]
           }
         ]

@@ -1,11 +1,11 @@
 ---
 title: "Style Library"
-description: "Centralized design token system for brand consistency and effortless updates"
+description: "Centralized design system for brand consistency"
 ---
 
 ## Overview
 
-The **Style Library** is the centralized system that stores all your **design tokens**. It ensures visual consistency and lets you update the design of all emails by changing tokens once. Think of it like Figma's design tokens, but built specifically for email.
+The **Style Library** is the centralized system that stores all your **design tokens**. It ensures visual consistency and lets you update the design of all emails by changing tokens once. Think of it like a brand kit built specifically for email.
 
 ## Core Principle
 
@@ -14,7 +14,7 @@ The **Style Library** is the centralized system that stores all your **design to
     All styles are defined **once** in the Style Library.
   </Card>
   <Card title="Reference, don't duplicate">
-    Emails and components **reference** these tokens instead of using hardcoded values.
+    Emails and components **reference** these tokens instead of using manual color codes.
   </Card>
   <Card title="Automatic propagation">
     Change a token, and all elements using it update **automatically**.
@@ -26,114 +26,68 @@ The **Style Library** is the centralized system that stores all your **design to
 
 ## Token Types
 
-### Colors (`colors`)
+### Colors
 
-Colors are reusable tokens referenced by ID.
-
-<CardGroup cols={2}>
-  <Card title="Structure">
-    - **id**: Unique identifier (e.g., "primary", "secondary")
-    - **name**: Human-readable name (e.g., "Primary Orange")
-    - **value**: Hex color code (e.g., "#F97316")
-    - **usage**: Allowed usage types (button, text, background)
-  </Card>
-  <Card title="Usage">
-    Used via `colorId` or `backgroundColor` in element properties.
-  </Card>
-</CardGroup>
-
-**Example**:
-```json
-{
-  "id": "primary",
-  "name": "Primary Orange",
-  "value": "#F97316",
-  "usage": ["button", "text", "background"]
-}
-```
-
-<Info>
-  A color can be used for buttons, text, backgrounds, or borders depending on its usage configuration.
-</Info>
-
-### Text Styles (`textStyles`)
-
-Text styles define typography (size, weight, font family, etc.).
+Colors are reusable tokens you define once (e.g., "Primary", "Background").
 
 <CardGroup cols={2}>
   <Card title="Structure">
-    - **id**: Unique identifier (e.g., "h1", "body")
-    - **name**: Human-readable name (e.g., "Heading 1")
-    - **fontSize**: Font size (e.g., "32px")
-    - **fontWeight**: Weight (bold, normal, etc.)
-    - **fontFamily**: Font family
-    - **lineHeight**: Line height
+    - **Name**: Human-readable name (e.g., "Primary Orange")
+    - **Value**: Color code (e.g., "#F97316")
+    - **Usage**: Where it can be used (button, text, background)
   </Card>
   <Card title="Usage">
-    Used via `textStyleId` in text and button elements.
+    Used in color pickers for elements.
   </Card>
 </CardGroup>
 
-**Example**:
-```json
-{
-  "id": "h1",
-  "name": "Heading 1",
-  "fontSize": "32px",
-  "fontWeight": "bold",
-  "fontFamily": "Inter, sans-serif",
-  "lineHeight": "1.2"
-}
-```
+### Text Styles
 
-### Button Styles (`buttonStyles`)
+Text styles define your typography (size, weight, font family).
+
+<CardGroup cols={2}>
+  <Card title="Structure">
+    - **Name**: e.g., "Heading 1", "Body Text"
+    - **Font Size**: e.g., "32px"
+    - **Font Weight**: Bold, normal, etc.
+    - **Font Family**: Your chosen font
+    - **Line Height**: Spacing between lines
+  </Card>
+  <Card title="Usage">
+    Applied to Text and Button elements.
+  </Card>
+</CardGroup>
+
+### Button Styles
 
 Button styles define complete button appearance.
 
 <CardGroup cols={2}>
   <Card title="Structure">
-    - **id**: Unique identifier (e.g., "primary", "secondary")
-    - **name**: Human-readable name (e.g., "Primary CTA")
-    - **colorId**: Background color (reference to color token)
-    - **textStyleId**: Text style (reference to textStyle)
-    - **textColorId**: Text color (optional, reference to color)
-    - **padding**: Inner spacing
-    - **borderRadius**: Rounded corners
-    - **borderWidth / borderColorId**: Borders (optional)
+    - **Name**: e.g., "Primary CTA"
+    - **Background Color**: Reference to a color token
+    - **Text Style**: Reference to a text style
+    - **Padding**: Inner spacing
+    - **Border Radius**: Rounded corners
   </Card>
   <Card title="Usage">
-    Used via `buttonStyleId` in button elements.
+    Applied to Button elements.
   </Card>
 </CardGroup>
 
-**Example**:
-```json
-{
-  "id": "primary",
-  "name": "Primary CTA Button",
-  "colorId": "primary",
-  "textStyleId": "body",
-  "textColorId": "white",
-  "padding": "12px 24px",
-  "borderRadius": "8px"
-}
-```
+### Link Styles
 
-### Link Styles (`linkStyles`)
-
-Link styles define link appearance in text.
+Link styles define how links look within text.
 
 <CardGroup cols={2}>
   <Card title="Structure">
-    - **id**: Unique identifier
-    - **name**: Human-readable name
-    - **colorId**: Link color (reference to color)
-    - **fontWeight**: Font weight
-    - **textDecoration**: Underline style (underline, none)
-    - **hoverColorId**: Hover color (optional)
+    - **Name**: e.g., "Standard Link"
+    - **Color**: Link color
+    - **Decoration**: Underline or none
+    - **Font Weight**: Bold or normal
   </Card>
   <Card title="Usage">
-    Used via `linkStyleId` in text elements with `href`.
+    Applied to links within Text elements.
   </Card>
 </CardGroup>
 
@@ -171,19 +125,10 @@ When you modify an existing token:
 ### Deleting Tokens
 
 <Warning>
-  Before deleting a token, check its usage with "View usage" to see which emails/components use it.
+  Before deleting a token, check its usage to see which emails/components use it.
 </Warning>
 
-If a token is in use, you'll need to either:
-- Replace it in all elements that use it first
-- Delete it and manually update each element
-
-### Viewing Token Usage
-
-Click "View usage" on any token to see:
-- List of emails using this token
-- List of components using this token
-- Direct navigation to each instance
+If a token is in use, you'll need to replace it in elements that use it before deleting.
 
 ## Importing Styles
 
@@ -194,14 +139,10 @@ You can import styles from an existing email:
     Select "Import styles" option from an existing email.
   </Step>
   <Step title="Automatic extraction">
-    Mailkick automatically extracts:
-    - All colors used
-    - All unique text styles
-    - All unique button styles
-    - All unique link styles
+    Mailkick automatically identifies colors and styles used in the email.
   </Step>
   <Step title="Add to library">
-    Extracted tokens are added to your Style Library.
+    Save the extracted styles to your Style Library for reuse.
   </Step>
 </Steps>
 
@@ -209,19 +150,11 @@ You can import styles from an existing email:
 
 <AccordionGroup>
   <Accordion title="Consistent naming">
-    Use clear, consistent names for your tokens (e.g., "primary", "secondary", "h1", "body").
-  </Accordion>
-  
-  <Accordion title="Logical organization">
-    Group tokens by logical category. Use prefixes if needed (e.g., "btn-primary", "text-heading").
+    Use clear names (e.g., "Primary", "Secondary", "Heading 1", "Body").
   </Accordion>
   
   <Accordion title="Reuse existing tokens">
-    Reuse existing tokens rather than creating new similar ones. This makes maintenance easier.
-  </Accordion>
-  
-  <Accordion title="Document usage">
-    Use descriptive names to document the intended usage of each token.
+    Reuse tokens rather than creating duplicates.
   </Accordion>
   
   <Accordion title="Test after changes">
@@ -229,30 +162,19 @@ You can import styles from an existing email:
   </Accordion>
 </AccordionGroup>
 
-## Style Library Benefits
+## Benefits
 
 <CardGroup cols={2}>
   <Card title="🎨 Consistency">
-    You can't use undefined colors/styles → consistent brand
+    No off-brand colors or fonts.
   </Card>
   <Card title="⚡ Maintenance">
-    One central change updates all emails
+    One central change updates all emails.
   </Card>
   <Card title="🚀 Productivity">
-    No more hunting for color codes → select from library
+    Select pre-defined styles instead of manually entering values.
   </Card>
   <Card title="🔄 Rebranding">
-    Change your entire brand by modifying a few tokens
+    Change your entire brand look by modifying a few tokens.
   </Card>
 </CardGroup>
-
-## Rendering with react-email
-
-Design tokens are converted to inline styles in react-email:
-
-- Color tokens → `color: '#F97316'` (hex values)
-- Text style tokens → Combined font properties
-- Button style tokens → Complete button styling
-- Link style tokens → Link-specific styles
-
-All token values are resolved at render time and applied as inline styles, ensuring compatibility across email clients while maintaining the flexibility of your design system.

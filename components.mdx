@@ -1,6 +1,6 @@
 ---
 title: "Components"
-description: "Reusable component blocks for faster email creation and design consistency"
+description: "Reusable building blocks for consistent email design"
 ---
 
 ## Overview
@@ -51,58 +51,20 @@ A component contains:
 - **Children**: Hierarchical element structure (same as emails)
 - **Style Library**: Uses the same design tokens as emails
 
-### Example Component Structure
-
-```json
-{
-  "id": "header-newsletter",
-  "name": "Newsletter Header",
-  "type": "component",
-  "properties": {
-    "backgroundColor": "#FFFFFF",
-    "padding": "20px"
-  },
-  "children": [
-    {
-      "type": "image",
-      "src": "https://example.com/logo.png",
-      "alt": "Company Logo"
-    },
-    {
-      "type": "text",
-      "content": "Newsletter Title",
-      "textStyleId": "h1"
-    }
-  ]
-}
-```
-
 ## Using Components in Emails
 
 When you insert a component into an email, it becomes an **instance** of that component:
 
 <Info>
-  The instance references the master component. You can override content (text, links, image URLs) via overrides, but the design stays linked to the master component.
+  The instance references the master component. You can override content (text, links, image URLs), but the design stays linked to the master component.
 </Info>
-
-### How instances work
-
-1. **Reference**: The email stores a reference to the component (by name/ID)
-2. **Resolution**: When rendering, Mailkick loads the master component
-3. **Overrides**: Content overrides are applied (text, URLs, etc.)
-4. **Rendering**: The resolved component is rendered with react-email
 
 ### Example: Newsletter Header Component
 
 **Component Master** (in library):
-```
-Newsletter Header Component
-├── Logo image (src: "/logo.png")
-├── Title text (content: "Weekly Newsletter")
-└── Navigation menu
-    ├── Link 1 (href: "/about")
-    └── Link 2 (href: "/contact")
-```
+- Logo image
+- Title text ("Weekly Newsletter")
+- Navigation menu
 
 **Instance in Email 1**:
 - Uses master design (logo, colors, spacing)
@@ -111,7 +73,7 @@ Newsletter Header Component
 **Instance in Email 2**:
 - Uses master design (same as Email 1)
 - Override: Title text → "Monthly Digest"
-- Override: Logo src → "/logo-black.png"
+- Override: Logo image → Different logo
 
 <Warning>
   If you change the master component's design (colors, spacing, layout), both Email 1 and Email 2 automatically update with the new design. Only content overrides are preserved.
@@ -127,7 +89,7 @@ Components can contain any type of element:
   </Accordion>
   
   <Accordion title="Structural elements">
-    Groups, flex-rows, and columns can be part of a component structure.
+    Groups, multi-columns, and sections can be part of a component structure.
   </Accordion>
   
   <Accordion title="Nested components">
@@ -142,7 +104,7 @@ Components can contain any type of element:
     Each component should have a clear, single purpose (e.g., "Header", "Footer", "CTA Button").
   </Card>
   <Card title="🎨 Use design tokens">
-    Build components using tokens from your Style Library, not hardcoded values.
+    Build components using tokens from your Style Library, not manual values.
   </Card>
   <Card title="📝 Name clearly">
     Use descriptive names like "Product Card" or "Newsletter Header" instead of "Component 1".
@@ -163,14 +125,3 @@ Your component library is accessible from:
 <Info>
   Components are account-wide, so all your emails can use any component you've created.
 </Info>
-
-## Rendering Components
-
-Components are rendered the same way as emails—using react-email. When a component instance is resolved:
-
-1. The master component structure is loaded
-2. Overrides are applied to specific elements
-3. The component is converted to react-email code
-4. It's rendered as part of the email's react-email structure
-
-This ensures components work seamlessly within emails and maintain compatibility across all email clients.
