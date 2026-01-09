@@ -9,36 +9,17 @@ This integration lets you **push your Mailkick email HTML** to **Klaviyo Templat
 ## Prerequisites
 
 - You must be a **workspace admin**.
-- You need a **Klaviyo Private API key** with **Templates** scope.
+- You need a **Klaviyo account**.
 
-## Step 1 — Create your Klaviyo API key
-
-1. Log in to [Klaviyo](https://www.klaviyo.com)
-2. Go to **Settings → API Keys**
-3. Click **Create Private API Key**
-4. Give it a name (e.g., "Mailkick Integration")
-5. Under **Scopes**, enable:
-   - **Templates** → Full Access
-6. Click **Create** and copy the key
-
-<Warning>
-Save your API key immediately — Klaviyo only shows it once!
-</Warning>
-
-## Step 2 — Add Klaviyo in Mailkick
+## Step 1 — Connect Klaviyo
 
 1. Open **Settings → Integrations**
 2. Select **Klaviyo**
-3. Paste your API key
-4. Click **Save changes**
+3. Click **Connect with Klaviyo**
+4. You will be redirected to Klaviyo to authorize the application
+5. Once authorized, you'll see "Klaviyo Connected" in Mailkick
 
-<img
-  style={{ borderRadius: '0.75rem' }}
-  src="/app/doc/integration/integration_klaviyo.jpg"
-  alt="Mailkick Klaviyo integration settings"
-/>
-
-## Step 3 — Sync an email
+## Step 2 — Sync an email
 
 1. Open an email in the editor
 2. Click **Export**
@@ -76,9 +57,7 @@ These variables will be resolved when you send via Klaviyo Flows or Campaigns.
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| `klaviyo_not_configured` | No API key saved | Add your API key in Settings → Integrations |
-| `klaviyo_missing_api_key` | API key was deleted | Re-add your API key |
-| `klaviyo_sync_failed` | API error | Check API key permissions (Templates scope required) |
-| `klaviyo_http_401` | Invalid API key | Generate a new API key in Klaviyo |
-| `klaviyo_http_403` | Insufficient permissions | Enable Templates scope on your key |
-
+| `klaviyo_not_configured` | Integration not connected | Click "Connect with Klaviyo" in Settings → Integrations |
+| `klaviyo_sync_failed` | API error or expired token | Try disconnecting and reconnecting the integration |
+| `klaviyo_http_401` | Token expired | Disconnect and reconnect the integration |
+| `klaviyo_http_403` | Insufficient permissions | Ensure your Klaviyo user has permissions to manage templates |

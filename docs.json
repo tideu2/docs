@@ -21,6 +21,35 @@
         "tab": "Guides",
         "groups": [
           {
+            "group": "Get Started",
+            "pages": [
+              "quickstart",
+              "development"
+            ]
+          },
+          {
+            "group": "Essentials",
+            "pages": [
+              "essentials/code",
+              "essentials/images",
+              "essentials/markdown",
+              "essentials/navigation",
+              "essentials/reusable-snippets",
+              "essentials/settings"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "emails",
+              "components",
+              "elements-structure",
+              "elements-simples",
+              "component-overrides",
+              "style-library"
+            ]
+          },
+          {
             "group": "Integrations",
             "pages": [
               "integrations/image-domain",
@@ -29,6 +58,34 @@
               "integrations/klaviyo",
               "integrations/onesignal",
               "integrations/sendgrid"
+            ]
+          },
+          {
+            "group": "AI Tools",
+            "pages": [
+              "ai-tools/cursor",
+              "ai-tools/windsurf",
+              "ai-tools/claude-code"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete",
+              "api-reference/endpoint/webhook"
             ]
           }
         ]
