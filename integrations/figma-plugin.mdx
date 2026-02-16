@@ -1,0 +1,96 @@
+---
+title: "Figma Plugin"
+description: "Import your Figma designs directly into Mailkick"
+---
+
+## Overview
+
+The **Mailkick Export** Figma plugin allows you to copy your email designs from Figma and paste them directly into the Mailkick editor. The plugin preserves your layout, typography, colors, and images.
+
+<Note>
+You need a [Mailkick account](https://mailkick.app) to use this plugin.
+</Note>
+
+## Installation
+
+1. Open Figma and go to **Plugins** > **Browse plugins in Community**
+2. Search for "Mailkick Export"
+3. Click **Install**
+
+Or install directly from the [Figma Community](https://www.figma.com/community/plugin/1592219977592212116).
+
+## How to use
+
+### Step 1: Select your design
+
+In Figma, select the frame or elements you want to export. The plugin will show you how many elements are selected.
+
+### Step 2: Copy your email
+
+1. Open the plugin: **Plugins** > **Mailkick Export**
+2. Click **Copy Email**
+3. The design data is now in your clipboard
+
+### Step 3: Paste in Mailkick
+
+1. Open your email in the [Mailkick editor](https://mailkick.app)
+2. Click anywhere in the editor
+3. Press `Cmd+V` (Mac) or `Ctrl+V` (Windows)
+4. Your design will be imported
+
+### Step 4: Import images (optional)
+
+If your design contains images, you'll need to import them separately:
+
+1. In the plugin, click **Export Images (optional)**
+2. A ZIP file will be downloaded containing all your images
+3. In Mailkick, a modal will appear asking for this ZIP file
+4. Drag and drop the ZIP file to upload your images
+
+<Tip>
+Images are deduplicated automatically. If you've already uploaded an image, Mailkick will use the existing one instead of re-uploading.
+</Tip>
+
+## What gets imported
+
+| Element | Supported |
+|---------|-----------|
+| Text (with styles) | Yes |
+| Images | Yes |
+| Buttons | Yes |
+| Layout (auto-layout) | Yes |
+| Colors | Yes |
+| Borders | Yes |
+| Border radius | Yes |
+| Spacing | Yes |
+| Icons | Yes (as images) |
+| Gradients | Partial |
+| Effects (shadows) | No |
+
+## Tips for best results
+
+1. **Use Auto Layout** - Frames with auto-layout convert better to responsive email layouts
+2. **Keep it simple** - Complex nested structures may not convert perfectly
+3. **Name your layers** - Well-named layers make it easier to edit in Mailkick
+4. **Use solid colors** - Gradients have limited support in email clients
+5. **Design at 600px width** - This is the standard email width
+
+## Troubleshooting
+
+### Images are not showing
+
+Make sure to export and import the images ZIP file. Images are not embedded in the clipboard data.
+
+### Layout looks different
+
+Email clients have limited CSS support. Some Figma layouts may need adjustment in Mailkick for best email compatibility.
+
+### Plugin not working
+
+1. Make sure you have elements selected
+2. Try refreshing Figma
+3. Reinstall the plugin if issues persist
+
+## Need help?
+
+Contact us at [support@mailkick.app](mailto:support@mailkick.app) or visit [mailkick.app](https://mailkick.app).

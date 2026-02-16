@@ -1,6 +1,6 @@
 ---
 title: "Enable image upload via a custom subdomain"
-description: "Serve and manage uploaded images from image.yourdomain.com (DNS + verification)"
+description: "Serve and manage uploaded images from image.yourdomain.com (DNS setup)"
 icon: "image"
 ---
 
@@ -18,40 +18,31 @@ Mailkick can serve uploaded images from a **custom image subdomain** (e.g. `imag
 2. Enter your hostname (example: `image.yourdomain.com`)
 3. Click **Get target** (or **Update domain**)
 
-Mailkick will return:
-- A **CNAME target** (to point your subdomain to)
-- Sometimes, **TXT verification records** (if the domain is already linked elsewhere)
+Mailkick will return a **CNAME target** to point your subdomain to.
 
-## Step 2 — Configure DNS (TXT + CNAME)
+## Step 2 — Add the CNAME record
 
-### If TXT verification is required
+In your DNS provider, create a CNAME record:
 
-Add **all TXT records** shown in the UI first, then add the CNAME.
+- **Name/Host**: your subdomain (e.g. `image`)
+- **Value/Target**: `proxy.mailkick.app`
 
 <Tip>
-TXT verification is commonly required when the same hostname is already linked to another hosting/Vercel project. Once the domain becomes <strong>active</strong>, you can usually remove the TXT records and keep only the CNAME.
+DNS propagation can take a few minutes. If you use Cloudflare as your DNS provider, make sure the record is set to <strong>DNS only</strong> (grey cloud), not Proxied.
 </Tip>
-
-### Add the CNAME
-
-Create a CNAME:
-- **Name/Host**: your subdomain (e.g. `image`)
-- **Value/Target**: the **CNAME target** shown in Mailkick
 
 ## Step 3 — Verify status
 
 Back in **Settings → Image Domain**, click **Refresh status** until it becomes **active**.
 
-Mailkick also checks a health endpoint:
+Mailkick checks a health endpoint automatically:
 
 - `https://<your-hostname>/_mailkick/health`
 
-If “Service health” is not OK, wait for DNS propagation and confirm your CNAME is correct.
+If "Service health" is not OK, wait for DNS propagation and confirm your CNAME is correct.
 
-## What changes once it’s active?
+## What changes once it's active?
 
 - New and existing image URLs are served from:
   - `https://<your-hostname>/image/<path>`
-- Preview/export will use your hostname when generating email HTML/React Email.
-
-
+- Preview/export will use your hostname when generating email HTML.

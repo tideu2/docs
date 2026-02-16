@@ -40,6 +40,7 @@
           {
             "group": "Integrations",
             "pages": [
+              "integrations/figma-plugin",
               "integrations/image-domain",
               "integrations/brevo",
               "integrations/customerio",
@@ -104,6 +105,12 @@
      "cursor",
      "vscode"
    ]
+  },
+  "integrations": {
+    "posthog": {
+      "apiKey": "phc_QKerFQIxfMXE83jspEcI20HHvpAXYR7UVjsHsEjqhR8",
+      "apiHost": "https://eu.i.posthog.com"
+    }
   },
   "footer": {
     "socials": {
