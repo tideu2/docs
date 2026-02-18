@@ -75,6 +75,10 @@
   "navbar": {
     "links": [
       {
+        "label": "Back to Mailkick",
+        "href": "https://mailkick.app"
+      },
+      {
         "label": "Documentation",
         "href": "/"
       }
