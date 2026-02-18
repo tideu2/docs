@@ -38,6 +38,12 @@
             ]
           },
           {
+            "group": "Translation",
+            "pages": [
+              "translation"
+            ]
+          },
+          {
             "group": "Integrations",
             "pages": [
               "integrations/figma-plugin",
