@@ -1,0 +1,227 @@
+---
+title: "Connect Webhook"
+description: "Receive Mailkick email HTML on your own endpoint via signed webhooks"
+icon: "plug"
+---
+
+This integration lets you **push your Mailkick email HTML** to **any HTTPS endpoint you control** (Zapier, n8n, your own backend). Every payload is **HMAC-SHA256 signed** so you can verify it really comes from Mailkick.
+
+## Prerequisites
+
+- You must be a **workspace admin**.
+- An HTTPS endpoint that accepts `POST` requests with a JSON body.
+- The ability to read HTTP headers on your receiver to verify the signature.
+
+## Step 1 — Enable the Webhook integration
+
+1. Open **Settings → Integrations**.
+2. Pick **Webhook** in the provider list.
+3. Click **Enable Webhook Integration**.
+
+## Step 2 — Generate the signing secret
+
+1. The **Webhook signing secret** section appears under the success banner.
+2. Click **Generate signing secret**.
+3. Copy the secret (it starts with `whsec_…`) and store it as an environment variable in your receiver.
+
+<Warning>
+Treat the secret like a password. Anyone holding it can forge requests that look like they come from Mailkick.
+</Warning>
+
+## Step 3 — Set the Webhook URL on each email
+
+1. Open an email → **Export**.
+2. In the right-hand panel, paste your endpoint URL into **Webhook URL** (e.g. `https://hooks.zapier.com/...`).
+3. Click **Sync to Webhook**. Mailkick `POST`s the signed payload to your URL.
+
+## Headers sent by Mailkick
+
+| Header                 | Description                                                               |
+| ---------------------- | ------------------------------------------------------------------------- |
+| `X-Mailkick-Signature` | `t=<unix_timestamp>,v1=<hmac_sha256_hex>` — **required for verification** |
+| `X-Mailkick-Event`     | The event name (currently always `sync`)                                  |
+| `X-Mailkick-Delivery`  | Unique UUID per delivery (use this for deduplication / debugging)         |
+| `Idempotency-Key`      | Same value as `X-Mailkick-Delivery`. Use it to deduplicate retries.       |
+| `User-Agent`           | `Mailkick-Webhook/1.0`                                                    |
+| `Content-Type`         | `application/json`                                                        |
+
+## Payload shape
+
+```json
+{
+  "event": "sync",
+  "email_template_id": "8c3d5b14-...",
+  "version_id": "v_abc123",
+  "subject": "Welcome to Acme",
+  "html": "<!DOCTYPE html>...",
+  "timestamp": "2026-05-02T09:38:44.123Z"
+}
+```
+
+- `event` — currently always `"sync"`. Future events may be added.
+- `email_template_id` — the Mailkick template id.
+- `version_id` — the snapshot version id, or `null` if no version exists yet.
+- `subject` — the email subject. May be `null`.
+- `html` — the rendered HTML, ready to send.
+- `timestamp` — ISO-8601 UTC timestamp the payload was generated. (The `t=` value in the signature header is the same instant in unix-seconds.)
+
+## Verify the signature
+
+1. Take the **raw request body** as a UTF-8 string. Do **not** re-serialize it from a parsed object — JSON key ordering and whitespace must match exactly what Mailkick signed.
+2. Concatenate `${timestamp}.${rawBody}`.
+3. Compute `HMAC-SHA256(secret, signedString)` and hex-encode the result.
+4. Compare against the `v1` value from `X-Mailkick-Signature` using a **constant-time** comparison.
+5. **Reject** the request if the timestamp drifts from your server's clock by more than 5 minutes (replay protection).
+
+### Node.js (Express)
+
+```js
+const crypto = require('crypto');
+const express = require('express');
+
+const app = express();
+
+// IMPORTANT: capture the raw body — verification fails if Express re-serializes it.
+app.use(
+  express.json({
+    verify: (req, _res, buf) => {
+      req.rawBody = buf.toString('utf8');
+    },
+  }),
+);
+
+const SECRET = process.env.MAILKICK_WEBHOOK_SECRET;
+
+function verifyMailkickSignature(rawBody, header, secret, toleranceSec = 300) {
+  if (!header) return false;
+  const parts = Object.fromEntries(
+    header.split(',').map((p) => {
+      const idx = p.indexOf('=');
+      return [p.slice(0, idx), p.slice(idx + 1)];
+    }),
+  );
+  const t = parseInt(parts.t, 10);
+  const v1 = parts.v1;
+  if (!t || !v1) return false;
+
+  if (Math.abs(Math.floor(Date.now() / 1000) - t) > toleranceSec) return false;
+
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(v1);
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
+}
+
+app.post('/mailkick-webhook', (req, res) => {
+  const ok = verifyMailkickSignature(req.rawBody, req.header('X-Mailkick-Signature'), SECRET);
+  if (!ok) return res.status(401).json({ error: 'invalid_signature' });
+
+  const event = req.body;
+  console.log('Received Mailkick webhook:', event.event, event.email_template_id);
+  res.status(200).json({ received: true });
+});
+```
+
+### Python (FastAPI)
+
+```python
+import hashlib
+import hmac
+import os
+import time
+from fastapi import FastAPI, Header, HTTPException, Request
+
+SECRET = os.environ["MAILKICK_WEBHOOK_SECRET"]
+TOLERANCE_SEC = 300
+
+app = FastAPI()
+
+def verify_signature(raw_body: bytes, header: str, secret: str) -> bool:
+    if not header:
+        return False
+    parts = dict(p.split("=", 1) for p in header.split(","))
+    try:
+        t = int(parts["t"])
+        v1 = parts["v1"]
+    except (KeyError, ValueError):
+        return False
+    if abs(int(time.time()) - t) > TOLERANCE_SEC:
+        return False
+    expected = hmac.new(
+        secret.encode("utf-8"),
+        f"{t}.".encode("utf-8") + raw_body,
+        hashlib.sha256,
+    ).hexdigest()
+    return hmac.compare_digest(expected, v1)
+
+@app.post("/mailkick-webhook")
+async def mailkick_webhook(request: Request, x_mailkick_signature: str = Header(None)):
+    raw = await request.body()
+    if not verify_signature(raw, x_mailkick_signature, SECRET):
+        raise HTTPException(status_code=401, detail="invalid_signature")
+    event = await request.json()
+    return {"received": True, "event": event["event"]}
+```
+
+### PHP
+
+```php
+<?php
+$secret = getenv('MAILKICK_WEBHOOK_SECRET');
+$toleranceSec = 300;
+
+$rawBody = file_get_contents('php://input');
+$header = $_SERVER['HTTP_X_MAILKICK_SIGNATURE'] ?? '';
+
+$parts = [];
+foreach (explode(',', $header) as $part) {
+    [$k, $v] = explode('=', $part, 2);
+    $parts[$k] = $v;
+}
+
+$t = (int) ($parts['t'] ?? 0);
+$v1 = $parts['v1'] ?? '';
+
+if (abs(time() - $t) > $toleranceSec) {
+    http_response_code(401); exit('invalid_timestamp');
+}
+
+$expected = hash_hmac('sha256', $t . '.' . $rawBody, $secret);
+if (!hash_equals($expected, $v1)) {
+    http_response_code(401); exit('invalid_signature');
+}
+
+http_response_code(200);
+echo json_encode(['received' => true]);
+```
+
+## Retries and idempotency
+
+Mailkick retries a delivery on `5xx` errors or network failures (3 attempts total: immediate, then `+1s`, then `+5s`). All retries share the same `Idempotency-Key` / `X-Mailkick-Delivery` UUID. If your endpoint is at-least-once safe (database upsert by id) you can ignore this. Otherwise, deduplicate by storing seen delivery IDs.
+
+`4xx` responses are treated as **permanent** errors and are **not** retried. Return `4xx` only if you want to definitively reject the payload.
+
+## Rotate the secret
+
+When a secret leaks, click **Rotate secret** in **Settings → Integrations → Webhook**. The new secret takes effect immediately. Any receiver still using the old secret will reject Mailkick payloads — so deploy the new secret to your receiver **before** rotating.
+
+## Troubleshooting
+
+### Signature does not match
+
+- Make sure you sign the **raw** request body, not a re-serialized JSON. Express's `req.body` after `express.json()` is *parsed*, not raw — capture it via the `verify` callback as shown above.
+- Check that `t=` and `v1=` are read in the right order and not swapped.
+- Confirm your server clock is within 5 minutes of UTC.
+
+### 412 Precondition Failed when syncing
+
+No signing secret has been generated for the workspace. Open **Settings → Integrations → Webhook** and click **Generate signing secret**.
+
+### 400 invalid_target_url
+
+Mailkick blocks non-HTTPS targets and any hostname that resolves to a private/loopback/link-local IP (SSRF protection). Use a public HTTPS endpoint.
+
+### Lost the secret
+
+Open **Settings → Integrations → Webhook**. The current secret is revealable from there for any workspace member. If it leaked, rotate it instead.

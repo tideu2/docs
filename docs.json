@@ -52,7 +52,8 @@
               "integrations/customerio",
               "integrations/klaviyo",
               "integrations/onesignal",
-              "integrations/sendgrid"
+              "integrations/sendgrid",
+              "integrations/webhook"
             ]
           }
         ]
