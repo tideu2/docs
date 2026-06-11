@@ -27,6 +27,10 @@ In your DNS provider, create a CNAME record:
 - **Name/Host**: your subdomain (e.g. `image`)
 - **Value/Target**: `proxy.mailkick.app`
 
+<Note>
+This CNAME is the only DNS change required. SSL is provisioned automatically — no certificates to create, and nothing else in your DNS is touched.
+</Note>
+
 <Tip>
 DNS propagation can take a few minutes. If you use Cloudflare as your DNS provider, make sure the record is set to <strong>DNS only</strong> (grey cloud), not Proxied.
 </Tip>
